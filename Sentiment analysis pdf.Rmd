@@ -169,7 +169,21 @@ So after this operation, we can now see the number of times positive words appea
 positivetidy_data
 ```
 
-Interestingly, we can now find that the positive word "well" appears for 240 times in the book Sense & Sensibiltiy.
+Interestingly, we can now find that the positive word "well" appears 240 times in the book Sense & Sensibiltiy. On a similar note, we can other positive words and the frequency of their appearance. Remember, this data only has positive words and not the negative words.
+
+In the next step, we will segregate our data into separate columns of positive and negative sentiments. We will then calculate the difference between positive and negative sentiment.However, now we will divide our dataframe into equal parts of 80 words each and find the total number of positive and negative words in those 80 words and then we will continue to do so in next batch of 80 words and so on. Now the question arises, why in a batch of 80 words specifically? Wait for the next step for the answer when we will be plotting ggplot for this data. We will discuss that in detail.
+
+So for now first load the tidyr package. tidyr package lets us use the spread function.
+We filter all the words from the book Sense & Sensibility from tidy_data. Next we use inner_join function to filter those words which appear in bing sentiment lexicon and also put up the sentiment (positive or negative) against the filtered words.
+
+```{r}
+library(tidyr)
+bing <- get_sentiments("bing")
+Senseandsensibility_sentiment<- tidy_data%>% filter(book=="Sense & Sensibility")%>%        inner_join(bing, by = "word")%>%count(book = "Sense & Sensibility" ,
+                    index = linenumber %/% 80, sentiment) %>%
+spread(sentiment, n, fill = 0) %>%mutate(sentiment = positive - negative)
+```
+
 
 
 When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
